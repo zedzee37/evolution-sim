@@ -12,6 +12,7 @@ const HEIGHT = 800
 func main() {
 	n := noise.NewPerlinNoise(100, 3, 2.0, 0.1, 0.5, 1.0)
 
+	rl.SetConfigFlags(rl.FlagWindowHighdpi)
 	rl.InitWindow(WIDTH, HEIGHT, "raylib [core] example - basic window")
 	defer rl.CloseWindow()
 
