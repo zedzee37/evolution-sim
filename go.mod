@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/gen2brain/raylib-go/raylib v0.55.1
-	github.com/zedzee37/znoise v0.0.0-20250701160436-f2e6ce318939
+	github.com/zedzee37/znoise v0.0.0-20250701185645-d44d4be77c83
 )
 
 require (
