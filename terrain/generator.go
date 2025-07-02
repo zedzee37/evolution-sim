@@ -8,6 +8,9 @@ import (
 	"github.com/zedzee37/znoise/noise"
 )
 
+const FALL_OFF_RADIUS = 400.0
+const FALL_OFF_SPEED = 0.01
+
 type Map struct {
 	Grid [][]rl.Color	
 	Width int
@@ -42,6 +45,23 @@ func (worldMap *Map) ApplyHeightMap(n noise.Noise) error {
 		for y := range worldMap.Height {
 			fx, fy := float64(x) / float64(worldMap.Width), float64(y) / float64(worldMap.Height)
 			noiseValue, err := n.Get(fx, fy)
+
+			center := rl.Vector2{
+				X: float32(worldMap.Width) / 2.0,
+				Y: float32(worldMap.Height) / 2.0,
+			}
+
+			distance := rl.Vector2Distance(center, rl.Vector2{
+				X: float32(x),
+				Y: float32(y),
+			})
+
+			if distance > FALL_OFF_RADIUS {
+				fallOffAmt := FALL_OFF_SPEED * (distance - FALL_OFF_RADIUS)
+				
+				noiseValue -= float64(fallOffAmt)
+				noiseValue = max(noiseValue, 0)
+			}
 			
 			if err != nil {
 				return err
