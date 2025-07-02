@@ -5,7 +5,6 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 type TileType struct {
 	StartColor rl.Color
 	EndColor rl.Color
-	Threshold float64
 }
 
 var Water = TileType{
@@ -18,11 +17,11 @@ var Sand = TileType{
 }
 var Grass = TileType{
 	StartColor: rl.Lime,
-	EndColor: rl.DarkGreen,
+	EndColor: rl.Green,
 }
 var Mountain = TileType{
 	StartColor: rl.DarkGray,
-	EndColor: rl.White,
+	EndColor: rl.DarkGray,
 }
 
 var TileSet = map[float64]TileType{

@@ -1,21 +1,24 @@
 package terrain
 
 import (
+	"fmt"
+	"slices"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/zedzee37/znoise/noise"
 )
 
 type Map struct {
-	Grid [][]*TileType	
+	Grid [][]rl.Color	
 	Width int
 	Height int
 }
 
 func NewMap(width int, height int) *Map {
-	grid := make([][]*TileType, width)
+	grid := make([][]rl.Color, width)
 	
 	for row := range width {
-		grid[row] = make([]*TileType, height)
+		grid[row] = make([]rl.Color, height)
 	}
 
 	worldMap := new(Map)
@@ -29,6 +32,12 @@ func NewMap(width int, height int) *Map {
 }
 
 func (worldMap *Map) ApplyHeightMap(n noise.Noise) error {
+	orderedThresholds := make([]float64, 0)
+	for threshold := range TileSet {
+		orderedThresholds = append(orderedThresholds, threshold)
+	}
+	slices.Sort(orderedThresholds)
+
 	for x := range worldMap.Width {
 		for y := range worldMap.Height {
 			fx, fy := float64(x) / float64(worldMap.Width), float64(y) / float64(worldMap.Height)
@@ -38,9 +47,20 @@ func (worldMap *Map) ApplyHeightMap(n noise.Noise) error {
 				return err
 			}
 
-			for threshold, tileType := range TileSet {
+			prevThreshold := 0.0
+			for _, threshold := range orderedThresholds {
 				if noiseValue <= threshold {
-					worldMap.Grid[x][y] = &tileType
+					tileType := TileSet[threshold]
+
+					adjustedNoiseValue := noiseValue - prevThreshold 
+					adjustedEndThreshold := threshold - prevThreshold
+					color := rl.ColorLerp(
+						tileType.StartColor,
+						tileType.EndColor,
+						float32(adjustedNoiseValue) / float32(adjustedEndThreshold,
+					))
+					worldMap.Grid[x][y] = color
+					break
 				}
 			}
 		}
@@ -49,6 +69,24 @@ func (worldMap *Map) ApplyHeightMap(n noise.Noise) error {
 	return nil
 }
 
-func (worldMap *Map) DrawMap(from rl.Vector2, tileSize rl.Vector2) {
+func (worldMap *Map) DrawMap(from rl.Vector2, tileSize rl.Vector2) error {	
+	if tileSize.X <= 0 || tileSize.Y <= 0 {
+		return fmt.Errorf("Expected a tile size greater than 0.")
+	}
+
+	for x := range worldMap.Width {
+		for y := range worldMap.Height {
+			color := worldMap.Grid[x][y]
+			
+			pos := rl.Vector2Add(from, rl.Vector2{
+				X: float32(x) * float32(tileSize.X),
+				Y: float32(y) * float32(tileSize.Y),
+			})
+			
+			rl.DrawRectangleV(pos, tileSize, color)
+		}
+	}
+
+	return nil
 }
 

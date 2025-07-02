@@ -12,7 +12,7 @@ const WIDTH = 800
 const HEIGHT = 800
 
 func main() {
-	heightMap := noise.NewPerlinNoise(100, 3, 2.0, 0.1, 0.5, 1.0)
+	heightMap := noise.NewPerlinNoise(100, 5, 2.0, 0.03, 0.5, 1.0)
 	worldMap := terrain.NewMap(WIDTH, HEIGHT)
 	err := worldMap.ApplyHeightMap(heightMap)
 
@@ -24,14 +24,16 @@ func main() {
 	rl.InitWindow(WIDTH, HEIGHT, "raylib [core] example - basic window")
 	defer rl.CloseWindow()
 
-
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
-
-		rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.LightGray)
+		
+		err := worldMap.DrawMap(rl.Vector2Zero(), rl.Vector2{X: 1, Y: 1})
+		if err != nil {
+			panic(err)
+		}
 
 		rl.EndDrawing()
 	}
