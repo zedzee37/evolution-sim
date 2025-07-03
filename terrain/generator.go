@@ -8,8 +8,8 @@ import (
 	"github.com/zedzee37/znoise/noise"
 )
 
-const FALL_OFF_RADIUS = 400.0
-const FALL_OFF_SPEED = 0.01
+const FALL_OFF_RADIUS = 350.0
+const FALL_OFF_SPEED = 0.005
 
 type Map struct {
 	Grid [][]rl.Color	

@@ -18,5 +18,8 @@ func (creature *Creature) Draw(offsetX int32, offsetY int32) {
 	rl.DrawCircle(drawX, drawY, 5.0, rl.Red)
 }
 
+func (_ *Creature) Load() {
+}
+
 func (_ *Creature) Tick(dt float64) {
 }

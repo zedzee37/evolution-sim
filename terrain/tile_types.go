@@ -25,7 +25,7 @@ var Mountain = TileType{
 }
 
 var TileSet = map[float64]TileType{
-	0.5: Water,
+	0.51: Water,
 	0.53: Sand,
 	0.7: Grass,
 	1.0: Mountain,
