@@ -1,6 +1,7 @@
 package main
 
 import (
+	"evolution-sim/entity"
 	"evolution-sim/terrain"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -26,6 +27,11 @@ func main() {
 
 	rl.SetTargetFPS(60)
 
+	creature := entity.NewCreature(rl.Vector2{
+		X: float32(WIDTH) / 2.0,
+		Y: float32(HEIGHT) / 2.0,
+	})
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
@@ -34,6 +40,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
+		creature.Draw(0, 0)
 
 		rl.EndDrawing()
 	}
