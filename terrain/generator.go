@@ -11,17 +11,22 @@ import (
 const FALL_OFF_RADIUS = 350.0
 const FALL_OFF_SPEED = 0.005
 
+type TileInstance struct {
+	Color rl.Color
+	TileType *TileType	
+}
+
 type Map struct {
-	Grid [][]rl.Color	
+	Grid [][]TileInstance	
 	Width int
 	Height int
 }
 
 func NewMap(width int, height int) *Map {
-	grid := make([][]rl.Color, width)
+	grid := make([][]TileInstance, width)
 	
 	for row := range width {
-		grid[row] = make([]rl.Color, height)
+		grid[row] = make([]TileInstance, height)
 	}
 
 	worldMap := new(Map)
@@ -79,7 +84,10 @@ func (worldMap *Map) ApplyHeightMap(n noise.Noise) error {
 						tileType.EndColor,
 						float32(adjustedNoiseValue) / float32(adjustedEndThreshold,
 					))
-					worldMap.Grid[x][y] = color
+					worldMap.Grid[x][y] = TileInstance{
+						Color: color,
+						TileType: tileType,
+					}
 					break
 				}
 			}
@@ -96,17 +104,24 @@ func (worldMap *Map) DrawMap(from rl.Vector2, tileSize rl.Vector2) error {
 
 	for x := range worldMap.Width {
 		for y := range worldMap.Height {
-			color := worldMap.Grid[x][y]
+			tileInstance := worldMap.Grid[x][y]
 			
 			pos := rl.Vector2Add(from, rl.Vector2{
 				X: float32(x) * float32(tileSize.X),
 				Y: float32(y) * float32(tileSize.Y),
 			})
 			
-			rl.DrawRectangleV(pos, tileSize, color)
+			rl.DrawRectangleV(pos, tileSize, tileInstance.Color)
 		}
 	}
 
 	return nil
 }
 
+func (worldMap *Map) GetTile(x int, y int) (*TileType, error) {
+	if x < 0 || x >= worldMap.Width || y < 0 || y >= worldMap.Height {
+		return nil, fmt.Errorf("x and y must be greater than zero, and less than the height and width of the Map")
+	}
+
+	return worldMap.Grid[x][y].TileType, nil
+}

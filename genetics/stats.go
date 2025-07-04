@@ -1,15 +1,23 @@
 package genetics
 
-type Stats struct {
-	Health float64
-	Speed float64
-	SwimSpeed float64
-	AirRespiration float64
-	WaterRespiration float64
-	Hunger float64
-	Thirst float64
-	LifeSpan float64
-	GestationTime float64
-	LookRadius float64
-	Scale float64
-}
+const (
+	HealthStat = iota
+	WalkSpeedStat
+	SwimSpeedStat
+	AirRespirationStat
+	WaterRespirationStat
+	ScaleStat
+	HungerStat
+	ThirstStat
+	StaminaStat
+	GestationPeriod
+	AgeStat
+	LifeSpanStat
+	AdultAgeStat
+	VisionStat
+	AttackStat
+	AggressionStat	
+	StatCount
+)
+
+type Stats [StatCount]float64

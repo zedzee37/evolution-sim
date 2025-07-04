@@ -31,9 +31,9 @@ func main() {
 	rl.SetTargetFPS(60)
 
 	creature := entity.NewCreature(rl.Vector2{
-		X: float32(WIDTH) / 2.0,
-		Y: float32(HEIGHT) / 2.0,
-	})
+		X: 250,
+		Y: 200,
+	}, worldMap)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginTextureMode(screenTexture)
@@ -44,6 +44,8 @@ func main() {
 			panic(err)
 		}
 
+		// TODO: add DeltaTime
+		creature.Tick(0.0)
 		creature.Draw(0, 0)
 
 		rl.EndTextureMode()
